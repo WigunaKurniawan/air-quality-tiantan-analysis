@@ -27,6 +27,20 @@ data_cleaned = data.fillna(method='ffill')
 data_cleaned['datetime'] = pd.to_datetime(data_cleaned[['year', 'month', 'day', 'hour']])
 data_cleaned.set_index('datetime', inplace=True)
 
+# Binning PM2.5 levels into categories
+def categorize_pm25(value):
+    if value < 35:
+        return 'Low'
+    elif 35 <= value < 75:
+        return 'Moderate'
+    elif 75 <= value < 150:
+        return 'High'
+    else:
+        return 'Very High'
+
+# Apply the binning function
+data_cleaned['PM2.5_category'] = data_cleaned['PM2.5'].apply(categorize_pm25)
+
 # Show Data Preview
 st.subheader('Dataset Preview')
 st.write(data_cleaned.head())
