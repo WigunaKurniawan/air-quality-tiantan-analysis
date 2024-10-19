@@ -125,13 +125,8 @@ st.write(category_counts)
 
 # Visualize the distribution of PM2.5 categories
 st.markdown("### Distribution of PM2.5 Levels by Category")
-
-# Find the category with the highest count
-max_category = category_counts.idxmax()  # Category with the maximum value
-colors = ['blue' if category != max_category else 'red' for category in category_counts.index]  # Highlight max in red
-
 fig, ax = plt.subplots(figsize=(8, 5))
-sns.barplot(x=category_counts.index, y=category_counts.values, palette=colors, ax=ax)
+sns.countplot(x='PM2.5_category', data=data_cleaned, palette='Set2', ax=ax)
 ax.set_title('Distribution of PM2.5 Levels by Category', fontsize=14)
 ax.set_xlabel('PM2.5 Category', fontsize=12)
 ax.set_ylabel('Count', fontsize=12)
