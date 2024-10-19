@@ -62,6 +62,37 @@ git clone https://github.com/WigunaKurniawan/air-quality-tiantan-analysis.git
 ```
 pip install -r requirements.txt
 ```
+## How to Run the Dashboard
+
+### Setup Environment - Anaconda
+1. Create and activate a new environment with Python 3.9:
+    ```bash
+    conda create --name main-ds python=3.9
+    conda activate main-ds
+    pip install -r requirements.txt
+    ```
+
+### Setup Environment - Shell/Terminal
+1. Create a project directory and navigate into it:
+    ```bash
+    mkdir proyek_analisis_data
+    cd proyek_analisis_data
+    ```
+2. Install dependencies using pipenv:
+    ```bash
+    pipenv install
+    pipenv shell
+    pip install -r requirements.txt
+    ```
+
+### Run the Streamlit App
+1. To run the dashboard, use the following command:
+    ```bash
+    streamlit run dashboard.py
+    ```
+
+This will start the Streamlit app, and you can access the interactive dashboard via your browser.
+
 
 ### Run the Streamlit app on the cloud:
 - Go to [Streamlit Cloud](https://streamlit.io/cloud) and deploy the **app.py** from the GitHub repository for interactive visualization.
