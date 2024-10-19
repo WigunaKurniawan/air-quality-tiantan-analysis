@@ -2,7 +2,11 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 import seaborn as sns
+
+# Set matplotlib backend to 'Agg' for non-GUI environments
+matplotlib.use('Agg')
 
 # Load the dataset
 data_url = 'https://raw.githubusercontent.com/WigunaKurniawan/air-quality-tiantan-analysis/main/Dataset/PRSA_Data_Tiantan_20130301-20170228.csv'
