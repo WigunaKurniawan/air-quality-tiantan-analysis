@@ -1,14 +1,12 @@
-
 import streamlit as st
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Title and Introduction
 st.title('Air Quality Data Analysis - Tiantan Station')
 st.markdown('''
-This dashboard presents a full analysis of air quality data collected from the **Tiantan Station** for the period between **2013 and 2017**.
+This repository contains a data analysis project focused on air quality at the Tiantan Station. The analysis is based on a dataset spanning from March 2013 to February 2017. This project is submitted as part of the requirements for the Dicoding program and also serves as a data science portfolio.
 
 **Nama**: Wiguna Kurniawan  
 **Email**: wiguna_kurniawan@ymail.com  
@@ -16,18 +14,46 @@ This dashboard presents a full analysis of air quality data collected from the *
 
 ---
 
-We will conduct the following steps:
+## Project Overview
+The goal of this project is to conduct an in-depth analysis of air quality at Tiantan Station, focusing on pollutants such as:
 
-- Data Loading
-- Data Cleaning and Wrangling
-- Exploratory Data Analysis (EDA)
-- Binning Analysis
-- Conclusion
+- **PM2.5** - Particulate matter with a diameter less than 2.5 micrometers.
+- **PM10** - Particulate matter with a diameter less than 10 micrometers.
+- **SO2** - Sulfur dioxide.
+- **NO2** - Nitrogen dioxide.
+- **CO** - Carbon monoxide.
+- **O3** - Ozone.
+- **Environmental factors** - Temperature, air pressure, wind speed, and precipitation.
 
 ---
+
+## Business Questions
+
+This analysis aims to answer the following business questions:
+
+- **Question 1**: What are the trends of PM2.5 levels at Tiantan Station over the period from 2013 to 2017?
+  - **Answer**: The analysis reveals significant fluctuations in PM2.5 levels, with some seasonal peaks where pollution levels increase, particularly during the winter months.
+
+- **Question 2**: Is there a correlation between temperature and PM2.5 levels?
+  - **Answer**: A correlation analysis shows that as temperatures drop, PM2.5 levels tend to increase. This suggests that colder weather conditions might contribute to higher pollution levels, potentially due to increased heating activities and reduced dispersion of air pollutants.
+
+---
+
+## Additional Analysis - Binning for PM2.5 Levels
+We conducted binning analysis for PM2.5 levels to categorize air quality into four groups:
+
+- **Low**: PM2.5 < 35 µg/m³
+- **Moderate**: 35 ≤ PM2.5 < 75 µg/m³
+- **High**: 75 ≤ PM2.5 < 150 µg/m³
+- **Very High**: PM2.5 > 150 µg/m³
+
+This analysis helps identify the number of days with varying levels of air quality based on PM2.5 concentrations.
+
+---
+
 ''')
 
-# Step 2: Load the Air Quality Dataset
+# Load the dataset
 st.subheader('Step 2: Load the Air Quality Dataset')
 st.markdown("We will load the dataset directly from the GitHub link to perform the analysis. The dataset is already combined into a single CSV file.")
 
