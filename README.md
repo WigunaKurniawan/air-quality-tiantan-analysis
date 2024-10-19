@@ -95,7 +95,7 @@ This will start the Streamlit app, and you can access the interactive dashboard 
 
 
 ### Run the Streamlit app on the cloud:
-- Go to [Streamlit Cloud](https://streamlit.io/cloud) and deploy the **app.py** from the GitHub repository for interactive visualization.
+- Go to https://air-quality-tiantan-analysis-qb7qrxsgk9pacbrt7hhbjp.streamlit.app/ for interactive visualization.
 
 ## License
 This project is licensed under the **MIT License**. You are free to use and modify the code as long as appropriate credit is given.
