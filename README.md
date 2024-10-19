@@ -18,10 +18,14 @@
 <p>This analysis aims to answer the following business questions:</p>
 <ol>
     <li><b>Question 1:</b> What are the trends of PM2.5 levels at Tiantan Station over the period from 2013 to 2017?</li>
-    <li><b>Answer:</b> The analysis reveals that there are significant fluctuations in PM2.5 levels, with some seasonal peaks where pollution levels increase, particularly during the winter months.</li>
-    <li><b>Question 2:</b> Is there a correlation between temperature and PM2.5 levels?</li>
-    <li><b>Answer:</b> A correlation analysis shows that as temperatures drop, PM2.5 levels tend to increase. This suggests that colder weather conditions might contribute to higher pollution levels, potentially due to increased heating activities and reduced dispersion of air pollutants.</li>
 </ol>
+<p><b>Answer:</b> The analysis reveals that there are significant fluctuations in PM2.5 levels, with some seasonal peaks where pollution levels increase, particularly during the winter months.</p>
+
+<ol start="2">
+    <li><b>Question 2:</b> Is there a correlation between temperature and PM2.5 levels?</li>
+</ol>
+<p><b>Answer:</b> A correlation analysis shows that as temperatures drop, PM2.5 levels tend to increase. This suggests that colder weather conditions might contribute to higher pollution levels, potentially due to increased heating activities and reduced dispersion of air pollutants.</p>
+
 
 <h2>Project Structure</h2>
 <pre>
