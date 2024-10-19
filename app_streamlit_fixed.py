@@ -58,7 +58,7 @@ st.subheader('Step 2: Load the Air Quality Dataset')
 st.markdown("We will load the dataset directly from the GitHub link to perform the analysis. The dataset is already combined into a single CSV file.")
 
 # Load the dataset
-data_url = 'https://github.com/WigunaKurniawan/air-quality-tiantan-analysis/blob/main/Dashboard/PRSA_Data_Tiantan_20130301-20170228.csv'
+data_url = 'https://raw.githubusercontent.com/WigunaKurniawan/air-quality-tiantan-analysis/main/Dashboard/PRSA_Data_Tiantan_20130301-20170228.csv'
 data = pd.read_csv(data_url)
 
 # Display the first few rows
