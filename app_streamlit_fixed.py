@@ -1,11 +1,8 @@
 
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 import seaborn as sns
-import matplotlib
-
-# Set matplotlib backend to 'Agg' just in case
-matplotlib.use('Agg')
 
 # Load the dataset
 data_url = 'https://raw.githubusercontent.com/WigunaKurniawan/air-quality-tiantan-analysis/main/Dataset/PRSA_Data_Tiantan_20130301-20170228.csv'
@@ -37,19 +34,29 @@ st.title('Air Quality Dashboard - Tiantan Station')
 st.subheader('Dataset Preview')
 st.write(data_cleaned.head())
 
-# Plot PM2.5 Levels Over Time (using pandas plotting, no pyplot)
+# Plot PM2.5 Levels Over Time
 st.subheader('PM2.5 Levels Over Time')
-pm25_plot = data_cleaned['PM2.5'].plot(figsize=(10, 6), title='PM2.5 Levels Over Time')
-st.pyplot(pm25_plot.figure)
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(data_cleaned.index, data_cleaned['PM2.5'], label='PM2.5', color='blue')
+ax.set_title('PM2.5 Levels Over Time', fontsize=14)
+ax.set_xlabel('Date', fontsize=12)
+ax.set_ylabel('PM2.5 Concentration', fontsize=12)
+st.pyplot(fig)
 
 # Distribution of PM2.5 Categories using Seaborn
 st.subheader('PM2.5 Levels Categorized')
-sns_fig = sns.countplot(x='PM2.5_category', data=data_cleaned, palette='Set2')
-sns_fig.set(title='Distribution of PM2.5 Levels by Category', xlabel='PM2.5 Category', ylabel='Count')
-st.pyplot(sns_fig.figure)
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.countplot(x='PM2.5_category', data=data_cleaned, palette='Set2', ax=ax)
+ax.set_title('Distribution of PM2.5 Levels by Category', fontsize=14)
+ax.set_xlabel('PM2.5 Category', fontsize=12)
+ax.set_ylabel('Count', fontsize=12)
+st.pyplot(fig)
 
-# Correlation Between Temperature and PM2.5 (Seaborn scatter plot)
+# Correlation Between Temperature and PM2.5 using Seaborn
 st.subheader('Correlation Between Temperature and PM2.5')
-sns_fig_corr = sns.scatterplot(x='TEMP', y='PM2.5', data=data_cleaned)
-sns_fig_corr.set(title='Correlation Between Temperature and PM2.5', xlabel='Temperature (°C)', ylabel='PM2.5 Concentration')
-st.pyplot(sns_fig_corr.figure)
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.scatterplot(x='TEMP', y='PM2.5', data=data_cleaned, ax=ax)
+ax.set_title('Correlation Between Temperature and PM2.5', fontsize=14)
+ax.set_xlabel('Temperature (°C)', fontsize=12)
+ax.set_ylabel('PM2.5 Concentration', fontsize=12)
+st.pyplot(fig)
