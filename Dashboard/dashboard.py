@@ -18,6 +18,7 @@ st.write("""
 1. What are the trends of PM2.5 levels at Tiantan Station from 2013 to 2017?  
 2. Is there a correlation between temperature and PM2.5 levels?
 3. What are the distributions of air quality metrics such as PM2.5, PM10, NO2, and CO?
+4. How do air quality indicators correlate with each other and with meteorological factors?
 """)
 
 # Load the dataset
@@ -51,13 +52,13 @@ data_cleaned = data.fillna(method='ffill')
 st.write('Preview of cleaned data:')
 st.write(data_cleaned.head())
 
+# Exploratory Data Analysis (EDA)
+st.header('Exploratory Data Analysis (EDA)')
+
 # Summary Statistics
 st.subheader('Summary Statistics')
 st.write("Below are the summary statistics for the numerical variables in the dataset:")
 st.write(data_cleaned.describe())
-
-# Exploratory Data Analysis (EDA)
-st.header('Exploratory Data Analysis (EDA)')
 
 # PM2.5 trends over time
 st.subheader('Explore PM2.5 Trends Over Time')
@@ -114,6 +115,19 @@ axes[1, 1].set_title('CO Distribution')
 plt.tight_layout()
 st.pyplot(fig)
 
+# Correlation Matrix Analysis
+st.subheader('Correlation Matrix of Air Quality Indicators and Meteorological Variables')
+st.write('We will now analyze correlations between air quality indicators (PM2.5, PM10, SO2, NO2, CO, etc.) and meteorological variables (TEMP, PRES, WSPM).')
+
+# Calculate the correlation matrix
+corr_matrix = data_cleaned[['PM2.5', 'PM10', 'SO2', 'NO2', 'CO', 'O3', 'TEMP', 'PRES', 'DEWP', 'WSPM']].corr()
+
+# Heatmap for correlation matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Matrix of Air Quality and Meteorological Variables')
+st.pyplot(plt)
+
 # Visualization & Explanatory Analysis
 st.header('Visualization & Explanatory Analysis')
 
@@ -124,9 +138,9 @@ The trends of PM2.5 levels at Tiantan Station from 2013 to 2017 show fluctuating
 
 # Correlation Heatmap
 st.subheader('Question 2: Is there a correlation between temperature and PM2.5 levels?')
-correlation_matrix = data_cleaned[['PM2.5', 'TEMP']].corr()
+correlation_matrix_temp = data_cleaned[['PM2.5', 'TEMP']].corr()
 plt.figure(figsize=(8, 6))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5, vmin=-1, vmax=1, square=True)
+sns.heatmap(correlation_matrix_temp, annot=True, cmap='coolwarm', linewidths=0.5, vmin=-1, vmax=1, square=True)
 plt.title('Correlation Between PM2.5 and Temperature', fontsize=14, pad=12)
 st.pyplot(plt)
 st.write("""
