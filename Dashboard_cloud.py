@@ -1,111 +1,74 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Title
-st.title('Air Quality Analysis at Tiantan Station (2013-2017)')
+# Load dataset
+st.title('Air Quality Data Dashboard')
+
 st.write("""
-**Author**: Wiguna Kurniawan  
-**Email**: [wiguna_kurniawan@ymail.com](mailto:wiguna_kurniawan@ymail.com)  
-**Dicoding ID**: Wiguna Kurniawan
+## Summary Statistics and Exploratory Data Analysis (EDA)
+In this dashboard, we will explore trends in air quality levels and analyze various correlations between variables like PM2.5, PM10, and meteorological factors such as temperature and wind speed.
 """)
 
-# Project Overview
-st.header('Project Overview')
-st.subheader('Business Questions')
-st.write("""
-1. What are the trends of PM2.5 levels at Tiantan Station from 2013 to 2017?  
-2. Is there a correlation between temperature and PM2.5 levels?
-""")
+# Load the data
+@st.cache
+def load_data():
+    data = pd.read_csv('PRSA_Data_Tiantan_20130301-20170228.csv')
+    return data
 
-st.subheader('Import Necessary Libraries')
-st.code('import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns')
+data = load_data()
 
-st.subheader('Load the Air Quality Dataset')
-data_url = 'https://raw.githubusercontent.com/WigunaKurniawan/air-quality-tiantan-analysis/main/Dashboard/PRSA_Data_Tiantan_20130301-20170228.csv'
-data = pd.read_csv(data_url)
-st.write('Preview of the dataset:')
+# Display first few rows of data
+st.subheader('Sample Data')
 st.write(data.head())
 
-# Data Wrangling
-st.header('Data Wrangling')
+# Summary statistics
+st.subheader('Summary Statistics')
+st.write(data.describe())
 
-st.subheader('Gathering Data')
-st.write("We will gather the dataset, which includes air quality measurements for pollutants and environmental factors.")
-
-st.subheader('Assessing Data')
-st.write("Checking for missing values and ensuring data quality.")
-missing_values = data.isnull().sum()
-st.write('Missing values in the dataset:')
-st.write(missing_values)
-
-st.subheader('Cleaning Data')
-st.write("""
-Missing values will be handled using forward fill, and a datetime index will be created.
-""")
-data['datetime'] = pd.to_datetime(data[['year', 'month', 'day', 'hour']])
-data.set_index('datetime', inplace=True)
-data_cleaned = data.fillna(method='ffill')
-st.write('Preview of cleaned data:')
-st.write(data_cleaned.head())
-
-# Exploratory Data Analysis (EDA)
-st.header('Exploratory Data Analysis (EDA)')
-
-st.subheader('Explore PM2.5 Trends Over Time')
-monthly_pm25 = data_cleaned['PM2.5'].resample('M').mean()
-plt.figure(figsize=(10, 6))
-plt.plot(monthly_pm25.index, monthly_pm25, label='PM2.5 (Monthly Avg)', color='royalblue', linewidth=2, marker='o')
-plt.title('Monthly Average PM2.5 Levels (2013-2017)', fontsize=14)
-plt.xlabel('Date (Month-Year)', fontsize=12)
-plt.ylabel('PM2.5 Concentration (µg/m³)', fontsize=12)
-plt.grid(True)
-plt.legend(loc='upper right')
-st.pyplot(plt)
-
-st.subheader('Explore Correlation Between PM2.5 and Temperature')
-annual_pm25 = data_cleaned['PM2.5'].resample('Y').mean()
-annual_temp = data_cleaned['TEMP'].resample('Y').mean()
-
-fig, ax1 = plt.subplots(figsize=(10, 6))
-ax1.plot(annual_pm25.index, annual_pm25, color='blue', marker='o', linewidth=2, label='PM2.5 (Annual Avg)')
-ax1.set_xlabel('Year', fontsize=12)
-ax1.set_ylabel('PM2.5 Concentration (µg/m³)', fontsize=12, color='blue')
-ax1.tick_params(axis='y', labelcolor='blue')
-ax1.grid(True)
-
-ax2 = ax1.twinx()
-ax2.plot(annual_temp.index, annual_temp, color='red', marker='o', linewidth=2, label='Temperature (Annual Avg)')
-ax2.set_ylabel('Temperature (°C)', fontsize=12, color='red')
-ax2.tick_params(axis='y', labelcolor='red')
-
-plt.title('Annual Trends of PM2.5 and Temperature (2013-2017)', fontsize=14, pad=15)
-fig.tight_layout()
+# Visualization - PM2.5 Distribution
+st.subheader('PM2.5 Distribution')
+fig, ax = plt.subplots()
+sns.histplot(data['PM2.5'].dropna(), bins=50, kde=True, ax=ax)
+ax.set_title('PM2.5 Distribution')
 st.pyplot(fig)
 
-# Visualization & Explanatory Analysis
-st.header('Visualization & Explanatory Analysis')
+# Visualization - PM10 Distribution
+st.subheader('PM10 Distribution')
+fig, ax = plt.subplots()
+sns.histplot(data['PM10'].dropna(), bins=50, kde=True, ax=ax)
+ax.set_title('PM10 Distribution')
+st.pyplot(fig)
 
-st.subheader('Question 1: What are the trends of PM2.5 levels?')
-st.write("""
-The trends of PM2.5 levels at Tiantan Station from 2013 to 2017 show fluctuating patterns with peaks in early 2014 and late 2015 to early 2016. There is no clear long-term downward trend, indicating that high levels of pollution persisted throughout the period.
-""")
+# Correlation Heatmap
+st.subheader('Correlation Matrix')
+corr_matrix = data[['PM2.5', 'PM10', 'SO2', 'NO2', 'CO', 'O3', 'TEMP', 'PRES', 'DEWP', 'WSPM']].corr()
 
-st.subheader('Question 2: Is there a correlation between temperature and PM2.5 levels?')
-correlation_matrix = data_cleaned[['PM2.5', 'TEMP']].corr()
-plt.figure(figsize=(8, 6))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5, vmin=-1, vmax=1, square=True)
-plt.title('Correlation Between PM2.5 and Temperature', fontsize=14, pad=12)
-st.pyplot(plt)
-st.write("""
-The correlation between temperature and PM2.5 levels is weak, suggesting temperature has little direct influence on PM2.5 concentration.
-""")
+fig, ax = plt.subplots(figsize=(10,8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', ax=ax)
+ax.set_title('Correlation Matrix of Air Quality Variables')
+st.pyplot(fig)
+
+# Time Series Plot - PM2.5, PM10, NO2
+st.subheader('Time Series of PM2.5, PM10, and NO2')
+
+# Convert to datetime
+data['datetime'] = pd.to_datetime(data[['year', 'month', 'day', 'hour']], errors='coerce')
+
+# Plot time series for PM2.5, PM10, and NO2
+fig, ax = plt.subplots(figsize=(14,6))
+ax.plot(data['datetime'], data['PM2.5'], label='PM2.5', alpha=0.6)
+ax.plot(data['datetime'], data['PM10'], label='PM10', alpha=0.6)
+ax.plot(data['datetime'], data['NO2'], label='NO2', alpha=0.6)
+ax.legend()
+ax.set_title('Time Series of PM2.5, PM10, and NO2')
+ax.set_xlabel('Time')
+ax.set_ylabel('Concentration')
+st.pyplot(fig)
 
 # Conclusion
-st.header('Conclusion')
 st.write("""
-1. **PM2.5 Trends**: PM2.5 levels fluctuated significantly from 2013 to 2017 with no consistent downward trend.
-2. **Correlation**: Temperature does not appear to significantly impact PM2.5 levels based on the weak correlation observed.
-3. **Recommendations**: Pollution control measures should be implemented year-round, especially during high pollution periods, along with promoting clean energy.
+## Conclusion
+The data shows strong correlations between PM2.5, PM10, and NO2. We can also observe seasonal trends in pollutant levels, with significant peaks during certain periods.
 """)
