@@ -52,13 +52,13 @@ data_cleaned = data.fillna(method='ffill')
 st.write('Preview of cleaned data:')
 st.write(data_cleaned.head())
 
+# Exploratory Data Analysis (EDA)
+st.header('Exploratory Data Analysis (EDA)')
+
 # Summary Statistics
 st.subheader('Summary Statistics')
 st.write("Below are the summary statistics for the numerical variables in the dataset:")
 st.write(data_cleaned.describe())
-
-# Exploratory Data Analysis (EDA)
-st.header('Exploratory Data Analysis (EDA)')
 
 # PM2.5 trends over time
 st.subheader('Explore PM2.5 Trends Over Time')
