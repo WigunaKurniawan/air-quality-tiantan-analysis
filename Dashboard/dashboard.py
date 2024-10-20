@@ -3,154 +3,109 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Title and Introduction
-st.title('Air Quality Data Analysis - Tiantan Station')
-st.markdown('''
-This repository contains a data analysis project focused on air quality at the Tiantan Station. The analysis is based on a dataset spanning from March 2013 to February 2017. This project is submitted as part of the requirements for the Dicoding program and also serves as a data science portfolio.
+# Title
+st.title('Air Quality Analysis at Tiantan Station (2013-2017)')
+st.write("""
+**Author**: Wiguna Kurniawan  
+**Email**: [wiguna_kurniawan@ymail.com](mailto:wiguna_kurniawan@ymail.com)  
+**Dicoding ID**: Wiguna Kurniawan
+""")
 
-**Nama**: Wiguna Kurniawan  
-**Email**: wiguna_kurniawan@ymail.com  
-**ID Dicoding**: Wiguna Kurniawan
+# Project Overview
+st.header('Project Overview')
+st.subheader('Business Questions')
+st.write("""
+1. What are the trends of PM2.5 levels at Tiantan Station from 2013 to 2017?  
+2. Is there a correlation between temperature and PM2.5 levels?
+""")
 
----
+st.subheader('Import Necessary Libraries')
+st.code('import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns')
 
-## Project Overview
-The goal of this project is to conduct an in-depth analysis of air quality at Tiantan Station, focusing on pollutants such as:
-
-- **PM2.5** - Particulate matter with a diameter less than 2.5 micrometers.
-- **PM10** - Particulate matter with a diameter less than 10 micrometers.
-- **SO2** - Sulfur dioxide.
-- **NO2** - Nitrogen dioxide.
-- **CO** - Carbon monoxide.
-- **O3** - Ozone.
-- **Environmental factors** - Temperature, air pressure, wind speed, and precipitation.
-
----
-
-## Business Questions
-
-This analysis aims to answer the following business questions:
-
-- **Question 1**: What are the trends of PM2.5 levels at Tiantan Station over the period from 2013 to 2017?
-  - **Answer**: The analysis reveals significant fluctuations in PM2.5 levels, with some seasonal peaks where pollution levels increase, particularly during the winter months.
-
-- **Question 2**: Is there a correlation between temperature and PM2.5 levels?
-  - **Answer**: A correlation analysis shows that as temperatures drop, PM2.5 levels tend to increase. This suggests that colder weather conditions might contribute to higher pollution levels, potentially due to increased heating activities and reduced dispersion of air pollutants.
-
----
-
-## Additional Analysis - Binning for PM2.5 Levels
-We conducted binning analysis for PM2.5 levels to categorize air quality into four groups:
-
-- **Low**: PM2.5 < 35 µg/m³
-- **Moderate**: 35 ≤ PM2.5 < 75 µg/m³
-- **High**: 75 ≤ PM2.5 < 150 µg/m³
-- **Very High**: PM2.5 > 150 µg/m³
-
-This analysis helps identify the number of days with varying levels of air quality based on PM2.5 concentrations.
-
----
-
-''')
-
-# Load the dataset
-st.subheader('Step 2: Load the Air Quality Dataset')
-st.markdown("We will load the dataset directly from the GitHub link to perform the analysis. The dataset is already combined into a single CSV file.")
-
-# Load the dataset
+st.subheader('Load the Air Quality Dataset')
 data_url = 'https://raw.githubusercontent.com/WigunaKurniawan/air-quality-tiantan-analysis/main/Dashboard/PRSA_Data_Tiantan_20130301-20170228.csv'
 data = pd.read_csv(data_url)
-
-# Display the first few rows
+st.write('Preview of the dataset:')
 st.write(data.head())
 
-# Step 3: Data Cleaning
-st.subheader('Step 3: Data Cleaning')
-st.markdown('''We will check for missing values and handle them using the forward fill method.
-Additionally, we will create a datetime column using the year, month, day, and hour columns.''')
+# Data Wrangling
+st.header('Data Wrangling')
 
-# Handle missing values with forward fill
+st.subheader('Gathering Data')
+st.write("We will gather the dataset, which includes air quality measurements for pollutants and environmental factors.")
+
+st.subheader('Assessing Data')
+st.write("Checking for missing values and ensuring data quality.")
+missing_values = data.isnull().sum()
+st.write('Missing values in the dataset:')
+st.write(missing_values)
+
+st.subheader('Cleaning Data')
+st.write("""
+Missing values will be handled using forward fill, and a datetime index will be created.
+""")
+data['datetime'] = pd.to_datetime(data[['year', 'month', 'day', 'hour']])
+data.set_index('datetime', inplace=True)
 data_cleaned = data.fillna(method='ffill')
+st.write('Preview of cleaned data:')
+st.write(data_cleaned.head())
 
-# Create datetime column for easier analysis
-data_cleaned['datetime'] = pd.to_datetime(data_cleaned[['year', 'month', 'day', 'hour']])
-data_cleaned.set_index('datetime', inplace=True)
+# Exploratory Data Analysis (EDA)
+st.header('Exploratory Data Analysis (EDA)')
 
-# Verify if there are still missing values
-st.write(data_cleaned.isnull().sum())
+st.subheader('Explore PM2.5 Trends Over Time')
+monthly_pm25 = data_cleaned['PM2.5'].resample('M').mean()
+plt.figure(figsize=(10, 6))
+plt.plot(monthly_pm25.index, monthly_pm25, label='PM2.5 (Monthly Avg)', color='royalblue', linewidth=2, marker='o')
+plt.title('Monthly Average PM2.5 Levels (2013-2017)', fontsize=14)
+plt.xlabel('Date (Month-Year)', fontsize=12)
+plt.ylabel('PM2.5 Concentration (µg/m³)', fontsize=12)
+plt.grid(True)
+plt.legend(loc='upper right')
+st.pyplot(plt)
 
-# Step 4: Exploratory Data Analysis (EDA)
-st.subheader('Step 4: Exploratory Data Analysis (EDA)')
-st.markdown("In this section, we will perform visualizations to explore trends in PM2.5 levels and analyze correlations between temperature and PM2.5.")
+st.subheader('Explore Correlation Between PM2.5 and Temperature')
+annual_pm25 = data_cleaned['PM2.5'].resample('Y').mean()
+annual_temp = data_cleaned['TEMP'].resample('Y').mean()
 
-# Plot PM2.5 levels over time
-st.markdown("### PM2.5 Levels Over Time")
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(data_cleaned.index, data_cleaned['PM2.5'], label='PM2.5', color='blue')
-ax.set_title('PM2.5 Levels Over Time at Tiantan Station', fontsize=14)
-ax.set_xlabel('Date', fontsize=12)
-ax.set_ylabel('PM2.5 Concentration', fontsize=12)
+fig, ax1 = plt.subplots(figsize=(10, 6))
+ax1.plot(annual_pm25.index, annual_pm25, color='blue', marker='o', linewidth=2, label='PM2.5 (Annual Avg)')
+ax1.set_xlabel('Year', fontsize=12)
+ax1.set_ylabel('PM2.5 Concentration (µg/m³)', fontsize=12, color='blue')
+ax1.tick_params(axis='y', labelcolor='blue')
+ax1.grid(True)
+
+ax2 = ax1.twinx()
+ax2.plot(annual_temp.index, annual_temp, color='red', marker='o', linewidth=2, label='Temperature (Annual Avg)')
+ax2.set_ylabel('Temperature (°C)', fontsize=12, color='red')
+ax2.tick_params(axis='y', labelcolor='red')
+
+plt.title('Annual Trends of PM2.5 and Temperature (2013-2017)', fontsize=14, pad=15)
+fig.tight_layout()
 st.pyplot(fig)
 
-# Correlation between temperature and PM2.5
-st.markdown("### Correlation Between Temperature and PM2.5 Levels")
-fig, ax = plt.subplots(figsize=(8, 6))
-sns.scatterplot(x='TEMP', y='PM2.5', data=data_cleaned, ax=ax)
-ax.set_title('Correlation between Temperature and PM2.5 Levels', fontsize=14)
-ax.set_xlabel('Temperature (°C)', fontsize=12)
-ax.set_ylabel('PM2.5 Concentration', fontsize=12)
-st.pyplot(fig)
+# Visualization & Explanatory Analysis
+st.header('Visualization & Explanatory Analysis')
 
-# Step 5: Binning Analysis for PM2.5 Levels
-st.subheader('Step 5: Binning Analysis for PM2.5 Levels')
-st.markdown('''We will classify PM2.5 levels into categories such as 'Low', 'Moderate', 'High', and 'Very High'.''')
+st.subheader('Question 1: What are the trends of PM2.5 levels?')
+st.write("""
+The trends of PM2.5 levels at Tiantan Station from 2013 to 2017 show fluctuating patterns with peaks in early 2014 and late 2015 to early 2016. There is no clear long-term downward trend, indicating that high levels of pollution persisted throughout the period.
+""")
 
-# Binning PM2.5 levels into categories
-def categorize_pm25(value):
-    if value < 35:
-        return 'Low'
-    elif 35 <= value < 75:
-        return 'Moderate'
-    elif 75 <= value < 150:
-        return 'High'
-    else:
-        return 'Very High'
+st.subheader('Question 2: Is there a correlation between temperature and PM2.5 levels?')
+correlation_matrix = data_cleaned[['PM2.5', 'TEMP']].corr()
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5, vmin=-1, vmax=1, square=True)
+plt.title('Correlation Between PM2.5 and Temperature', fontsize=14, pad=12)
+st.pyplot(plt)
+st.write("""
+The correlation between temperature and PM2.5 levels is weak, suggesting temperature has little direct influence on PM2.5 concentration.
+""")
 
-# Apply the binning function to the 'PM2.5' column
-data_cleaned['PM2.5_category'] = data_cleaned['PM2.5'].apply(categorize_pm25)
-
-# Check the distribution of categories
-category_counts = data_cleaned['PM2.5_category'].value_counts()
-st.write(category_counts)
-
-# Visualize the distribution of PM2.5 categories with all bars in blue but highlight the highest with thicker edges
-st.markdown("### Distribution of PM2.5 Levels by Category")
-
-# Find the category with the highest count
-max_category = category_counts.idxmax()  # Category with the maximum value
-
-fig, ax = plt.subplots(figsize=(8, 5))
-
-# Plot all bars with the same color (blue)
-bars = sns.barplot(x=category_counts.index, y=category_counts.values, color='blue', ax=ax)
-
-# Highlight the bar with the highest count with a thicker edge
-for bar, category in zip(bars.patches, category_counts.index):
-    if category == max_category:
-        bar.set_edgecolor('black')  # Set edge color to black
-        bar.set_linewidth(2.5)      # Make the edge thicker
-
-ax.set_title('Distribution of PM2.5 Levels by Category', fontsize=14)
-ax.set_xlabel('PM2.5 Category', fontsize=12)
-ax.set_ylabel('Count', fontsize=12)
-st.pyplot(fig)
-
-
-
-# Step 6: Conclusion
-st.subheader('Step 6: Conclusion')
-st.markdown('''
-- **PM2.5 levels show significant seasonal variation**, with higher levels during colder months.
-- **Negative correlation between temperature and PM2.5** suggests that colder weather conditions lead to higher pollution levels.
-- Binning analysis indicates that the majority of days fall into the 'Moderate' and 'High' categories for PM2.5 levels.
-''')
+# Conclusion
+st.header('Conclusion')
+st.write("""
+1. **PM2.5 Trends**: PM2.5 levels fluctuated significantly from 2013 to 2017 with no consistent downward trend.
+2. **Correlation**: Temperature does not appear to significantly impact PM2.5 levels based on the weak correlation observed.
+3. **Recommendations**: Pollution control measures should be implemented year-round, especially during high pollution periods, along with promoting clean energy.
+""")
