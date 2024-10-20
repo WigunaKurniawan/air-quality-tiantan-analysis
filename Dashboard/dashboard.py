@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Title
+# Title and Author Information
 st.title('Air Quality Analysis at Tiantan Station (2013-2017)')
 st.write("""
 **Author**: Wiguna Kurniawan  
@@ -17,29 +17,30 @@ st.subheader('Business Questions')
 st.write("""
 1. What are the trends of PM2.5 levels at Tiantan Station from 2013 to 2017?  
 2. Is there a correlation between temperature and PM2.5 levels?
+3. What are the distributions of air quality metrics such as PM2.5, PM10, NO2, and CO?
 """)
 
-st.subheader('Import Necessary Libraries')
-st.code('import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns')
-
+# Load the dataset
 st.subheader('Load the Air Quality Dataset')
 data_url = 'https://raw.githubusercontent.com/WigunaKurniawan/air-quality-tiantan-analysis/main/Dashboard/PRSA_Data_Tiantan_20130301-20170228.csv'
 data = pd.read_csv(data_url)
 st.write('Preview of the dataset:')
 st.write(data.head())
 
-# Data Wrangling
+# Data Wrangling Section
 st.header('Data Wrangling')
 
 st.subheader('Gathering Data')
 st.write("We will gather the dataset, which includes air quality measurements for pollutants and environmental factors.")
 
+# Missing Data Analysis
 st.subheader('Assessing Data')
 st.write("Checking for missing values and ensuring data quality.")
 missing_values = data.isnull().sum()
 st.write('Missing values in the dataset:')
 st.write(missing_values)
 
+# Cleaning the data by handling missing values
 st.subheader('Cleaning Data')
 st.write("""
 Missing values will be handled using forward fill, and a datetime index will be created.
@@ -50,9 +51,15 @@ data_cleaned = data.fillna(method='ffill')
 st.write('Preview of cleaned data:')
 st.write(data_cleaned.head())
 
+# Summary Statistics
+st.subheader('Summary Statistics')
+st.write("Below are the summary statistics for the numerical variables in the dataset:")
+st.write(data_cleaned.describe())
+
 # Exploratory Data Analysis (EDA)
 st.header('Exploratory Data Analysis (EDA)')
 
+# PM2.5 trends over time
 st.subheader('Explore PM2.5 Trends Over Time')
 monthly_pm25 = data_cleaned['PM2.5'].resample('M').mean()
 plt.figure(figsize=(10, 6))
@@ -64,6 +71,7 @@ plt.grid(True)
 plt.legend(loc='upper right')
 st.pyplot(plt)
 
+# Correlation between PM2.5 and Temperature
 st.subheader('Explore Correlation Between PM2.5 and Temperature')
 annual_pm25 = data_cleaned['PM2.5'].resample('Y').mean()
 annual_temp = data_cleaned['TEMP'].resample('Y').mean()
@@ -84,6 +92,28 @@ plt.title('Annual Trends of PM2.5 and Temperature (2013-2017)', fontsize=14, pad
 fig.tight_layout()
 st.pyplot(fig)
 
+# Distribution of Air Quality Metrics
+st.subheader('Distribution of Air Quality Metrics')
+st.write('Visualizing the distributions of PM2.5, PM10, NO2, and CO concentrations.')
+
+# Plot distributions for PM2.5, PM10, NO2, and CO
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+
+sns.histplot(data_cleaned['PM2.5'].dropna(), bins=50, kde=True, ax=axes[0, 0])
+axes[0, 0].set_title('PM2.5 Distribution')
+
+sns.histplot(data_cleaned['PM10'].dropna(), bins=50, kde=True, ax=axes[0, 1])
+axes[0, 1].set_title('PM10 Distribution')
+
+sns.histplot(data_cleaned['NO2'].dropna(), bins=50, kde=True, ax=axes[1, 0])
+axes[1, 0].set_title('NO2 Distribution')
+
+sns.histplot(data_cleaned['CO'].dropna(), bins=50, kde=True, ax=axes[1, 1])
+axes[1, 1].set_title('CO Distribution')
+
+plt.tight_layout()
+st.pyplot(fig)
+
 # Visualization & Explanatory Analysis
 st.header('Visualization & Explanatory Analysis')
 
@@ -92,6 +122,7 @@ st.write("""
 The trends of PM2.5 levels at Tiantan Station from 2013 to 2017 show fluctuating patterns with peaks in early 2014 and late 2015 to early 2016. There is no clear long-term downward trend, indicating that high levels of pollution persisted throughout the period.
 """)
 
+# Correlation Heatmap
 st.subheader('Question 2: Is there a correlation between temperature and PM2.5 levels?')
 correlation_matrix = data_cleaned[['PM2.5', 'TEMP']].corr()
 plt.figure(figsize=(8, 6))
