@@ -55,6 +55,7 @@ st.write(data_cleaned.head())
 
 # PM2.5 Trends Over Time
 st.header('PM2.5 Trends Over Time')
+st.write("The chart below displays monthly average PM2.5 levels from 2013 to 2017.")
 monthly_pm25 = data_cleaned['PM2.5'].resample('M').mean()
 
 plt.figure(figsize=(10, 6))
@@ -66,11 +67,21 @@ plt.grid(True)
 plt.legend(loc='upper right')
 st.pyplot(plt)
 
+# Answer Business Question 1: What are the trends of PM2.5 levels at Tiantan Station (2013-2017)?
+st.subheader('Answer to Question 1: PM2.5 Trends')
+st.write("""
+The trends of PM2.5 levels at Tiantan Station from 2013 to 2017 show fluctuating patterns with peaks in early 2014 and late 2015 to early 2016. There is no clear long-term downward trend, indicating that high levels of pollution persisted throughout the period. The average PM2.5 levels dropped during mid-2014 and mid-2015, but rose again later.
+""")
+
 # Correlation Between PM2.5 and Temperature
 st.header('Correlation Between PM2.5 and Temperature')
+st.write("The heatmap below shows the correlation between temperature and PM2.5 levels.")
+
+# Resample the data by year for PM2.5 and temperature
 annual_pm25 = data_cleaned['PM2.5'].resample('Y').mean()
 annual_temp = data_cleaned['TEMP'].resample('Y').mean()
 
+# Plot dual-axis line chart for PM2.5 and temperature trends
 fig, ax1 = plt.subplots(figsize=(10, 6))
 
 ax1.plot(annual_pm25.index, annual_pm25, color='blue', marker='o', linewidth=2, label='PM2.5 (Annual Avg)')
@@ -88,7 +99,7 @@ plt.title('Annual Trends of PM2.5 and Temperature (2013-2017)', fontsize=14, pad
 fig.tight_layout()
 st.pyplot(fig)
 
-# Heatmap Correlation Matrix
+# Heatmap for Correlation Between PM2.5 and Temperature
 st.subheader('Correlation Heatmap')
 correlation_matrix = data_cleaned[['PM2.5', 'TEMP']].corr()
 
@@ -97,11 +108,16 @@ sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5, vmi
 plt.title('Correlation Between PM2.5 and Temperature', fontsize=14, pad=12)
 st.pyplot(plt)
 
+# Answer Business Question 2: Is there a correlation between temperature and PM2.5 levels?
+st.subheader('Answer to Question 2: Correlation Between Temperature and PM2.5')
+st.write("""
+The correlation between temperature and PM2.5 levels is weak, as indicated by the low correlation coefficient (closer to 0). This suggests that temperature does not strongly influence PM2.5 concentration. The scatter plot and correlation matrix confirm that there is no significant direct relationship between the two variables over the observed period.
+""")
+
 # Conclusion
 st.header('Conclusion')
 st.write("""
-- PM2.5 levels fluctuated with peaks in early 2014 and late 2015 to early 2016.
-- There is no clear long-term downward trend in PM2.5 levels.
-- Temperature does not appear to significantly impact PM2.5 levels based on weak correlation.
-- Recommendations include implementing year-round pollution control, promoting clean energy, and raising public awareness about air quality.
+1. **PM2.5 Trends**: PM2.5 levels fluctuated with peaks in early 2014 and late 2015 to early 2016. There is no clear long-term downward trend in PM2.5 levels.
+2. **Correlation**: Temperature does not appear to significantly impact PM2.5 levels based on weak correlation.
+3. **Recommendations**: Implementing year-round pollution control, promoting clean energy, and raising public awareness are essential for improving air quality.
 """)
