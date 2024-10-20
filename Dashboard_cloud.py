@@ -35,7 +35,7 @@ st.write("""
 """)
 
 # Step 1: Data Loading
-st.header('Step 1: Data Loading')
+st.header('Data Gathering')
 st.write("We will load the dataset from a CSV file that contains air quality measurements from Tiantan Station.")
 data_url = 'https://raw.githubusercontent.com/WigunaKurniawan/air-quality-tiantan-analysis/main/Dashboard/PRSA_Data_Tiantan_20130301-20170228.csv'
 data = pd.read_csv(data_url)
@@ -44,7 +44,7 @@ st.write('Preview of the dataset:')
 st.write(data.head())
 
 # Step 2: Data Wrangling
-st.header('Step 2: Data Wrangling')
+st.header('Data Wrangling')
 st.write("""
 In this step, we handle missing values and create a datetime index for easier time-based analysis.
 """)
@@ -55,7 +55,7 @@ st.write('Preview of cleaned data:')
 st.write(data_cleaned.head())
 
 # Step 3: Exploratory Data Analysis (EDA)
-st.header('Step 3: Exploratory Data Analysis (EDA)')
+st.header('Exploratory Data Analysis (EDA)')
 
 # PM2.5 Trends Over Time
 st.subheader('PM2.5 Trends Over Time')
@@ -78,7 +78,7 @@ The trends of PM2.5 levels at Tiantan Station from 2013 to 2017 show fluctuating
 """)
 
 # Step 4: Analyze Correlation Between PM2.5 and Temperature
-st.header('Step 4: Analyze Correlation Between PM2.5 and Temperature')
+st.header(Analyze Correlation Between PM2.5 and Temperature')
 
 st.write("Next, we will investigate the relationship between temperature and PM2.5 levels.")
 
@@ -120,7 +120,7 @@ The correlation between temperature and PM2.5 levels is weak, as indicated by th
 """)
 
 # Step 5: Conclusion
-st.header('Step 5: Conclusion')
+st.header('Conclusion')
 st.write("""
 1. **PM2.5 Trends**: PM2.5 levels fluctuated with peaks in early 2014 and late 2015 to early 2016. There is no clear long-term downward trend in PM2.5 levels.
 2. **Correlation**: Temperature does not appear to significantly impact PM2.5 levels based on weak correlation.
